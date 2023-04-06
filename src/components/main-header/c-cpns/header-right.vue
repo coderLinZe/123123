@@ -12,7 +12,6 @@
         <el-icon><Postcard /></el-icon>
       </span>
     </div>
-
     <el-dropdown>
       <span class="userInfo">
         <el-avatar

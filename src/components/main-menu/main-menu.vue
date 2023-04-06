@@ -35,7 +35,7 @@
 import useLoginStore from '@/stores/login/login'
 import { useRoute, useRouter } from 'vue-router'
 import { mapPathToMenu } from '@/utils/map-menus'
-import { ref } from 'vue'
+import { computed } from 'vue'
 defineProps({
   isFold: {
     type: Boolean,
@@ -51,10 +51,12 @@ const itemClick = (item: any) => {
   const url = item.url
   router.push(url)
 }
-const route = useRoute()
-const pathMenu = mapPathToMenu(route.path, userMenus)
 
-const defaultActive = ref(pathMenu.id + '')
+const route = useRoute()
+const defaultActive = computed(() => {
+  const pathMenu = mapPathToMenu(route.path, userMenus)
+  return pathMenu.id + ''
+})
 </script>
 
 <style lang="less" scoped>

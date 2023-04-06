@@ -1,9 +1,9 @@
 import axios from 'axios'
 import type { AxiosInstance } from 'axios'
 import type { ZEConfig } from './type'
-
+import { ElLoading } from 'element-plus'
+import type { LoadingInstance } from 'element-plus/es/components/loading/src/loading'
 // 拦截器: 蒙版Loading/token/修改配置
-
 /**
  * 两个难点:
  *  1.拦截器进行精细控制
@@ -13,18 +13,22 @@ import type { ZEConfig } from './type'
  *
  *  2.响应结果的类型处理(泛型)
  */
-
 class ZERequest {
+  loading?: LoadingInstance
   instance: AxiosInstance
   // request实例 => axios的实例
   constructor(config: ZEConfig) {
     this.instance = axios.create(config)
-
     // 每个instance实例都添加拦截器
     this.instance.interceptors.request.use(
       (config) => {
         // loading/token
         // console.log('全局请求成功的拦截')
+        this.loading = ElLoading.service({
+          lock: true,
+          text: 'Loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        })
         return config
       },
       (err) => {
@@ -35,6 +39,8 @@ class ZERequest {
     this.instance.interceptors.response.use(
       (res) => {
         // console.log('全局响应成功的拦截')
+        // 将loading移除
+        this.loading?.close()
         return res.data
       },
       (err) => {
@@ -42,6 +48,18 @@ class ZERequest {
         return err
       }
     )
+
+    // 针对特定的hyRequest实例添加拦截器
+    if (config.interceptors) {
+      this.instance.interceptors.request.use(
+        config.interceptors.requestSuccessFn,
+        config.interceptors.requestFailureFn
+      )
+      this.instance.interceptors.response.use(
+        config.interceptors.responseSuccessFn,
+        config.interceptors.responseFailureFn
+      )
+    }
   }
 
   // 封装网络请求的方法
@@ -50,6 +68,11 @@ class ZERequest {
     // 单次请求的成功拦截处理
     if (config.interceptors?.requestSuccessFn) {
       config = config.interceptors.requestSuccessFn(config)
+      this.loading = ElLoading.service({
+        lock: true,
+        text: 'Loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
     }
 
     // 返回Promise
@@ -60,6 +83,8 @@ class ZERequest {
           // 单词响应的成功拦截处理
           if (config.interceptors?.responseSuccessFn) {
             res = config.interceptors.responseSuccessFn(res)
+            // 将loading移除
+            this.loading?.close()
           }
           resolve(res)
         })

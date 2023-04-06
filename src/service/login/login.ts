@@ -1,6 +1,5 @@
 import zeRequest from '..'
 import type { IAccount } from '@/types'
-import localCache from '@/utils/localCache'
 
 export function accountLoginRequest(account: IAccount) {
   return zeRequest.post({
@@ -11,18 +10,12 @@ export function accountLoginRequest(account: IAccount) {
 
 export function getUserInfoById(id: number) {
   return zeRequest.get({
-    url: `/users/${id}`,
-    headers: {
-      Authorization: 'Bearer ' + localCache.getCache('token')
-    }
+    url: `/users/${id}`
   })
 }
 
 export function getUserMenuByRoleId(id: number) {
   return zeRequest.get({
-    url: `/role/${id}/menu`,
-    headers: {
-      Authorization: 'Bearer ' + localCache.getCache('token')
-    }
+    url: `/role/${id}/menu`
   })
 }

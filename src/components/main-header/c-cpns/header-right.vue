@@ -20,7 +20,7 @@
           src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
           shape="circle"
         />
-        <span class="name">coderwhy</span>
+        <span class="name">{{ name }}</span>
         <span class="arrow"
           ><el-icon><arrow-down /></el-icon
         ></span>
@@ -47,11 +47,16 @@
 
 <script setup lang="ts">
 import router from '@/router'
+import useLoginStore from '@/stores/login/login'
 import localCache from '@/utils/localCache'
+import { ref } from 'vue'
+const name = ref()
+
+const userInfo = useLoginStore().userInfo
+name.value = userInfo.name
 
 const exitClick = () => {
   localCache.removeCache('token')
-  
   router.push('/login')
 }
 </script>

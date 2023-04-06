@@ -6,9 +6,10 @@
           <component :is="isFold ? 'Expand' : 'Fold'" />
         </el-icon>
       </div>
-      <HeaderCrumb></HeaderCrumb>
+      <div class="Crumb">
+        <HeaderCrumb></HeaderCrumb>
+      </div>
     </div>
-
     <headerRight></headerRight>
   </div>
 </template>
@@ -35,6 +36,9 @@ const handleMenuClick = () => {
     display: flex;
     align-items: center;
     flex: 3;
+    .Crumb{
+      margin-left: 10px;
+    }
   }
 }
 </style>

@@ -1,5 +1,4 @@
 import type { RouteRecordRaw } from 'vue-router'
-
 function loadLocalRoutes() {
   const localRouters: RouteRecordRaw[] = []
   // 1.获取到router/main下面所有的.ts文件里面的路由对象
@@ -25,21 +24,26 @@ export function mapMenusToRoutes(userMenus: any[]) {
     for (const submenu of menu.children) {
       const route = localRoutes.find((item) => item.path === submenu.url)
       // 添加动态路由
-      if (route) routes.push(route)
-
+      if (route) {
+        // 将route的顶层菜单增加到重定向功能
+        if (!routes.find((item) => item.path === menu.url)) {
+          // redirect 当用户输入路由和现有路由不匹配时跳转
+          routes.push({ path: menu.url, redirect: route.path })
+        }
+        // 将2级菜单对应的路径添加到routes
+        routes.push(route)
+      }
       //   记录第一个匹配的菜单
       if (firstMenu === null && route) firstMenu = submenu
     }
   }
   return routes
 }
-
 /**
  * 根据路径匹配需要显示的菜单
  * @param path 需要匹配的路径
  * @param userMenus  所有的菜单
  */
-
 export function mapPathToMenu(path: string, userMenus: any[]) {
   for (const menu of userMenus) {
     for (const submenu of menu.children) {
@@ -48,4 +52,23 @@ export function mapPathToMenu(path: string, userMenus: any[]) {
       }
     }
   }
+}
+
+// 面包屑
+interface IBreadcrumbs {
+  name: string
+  path: string
+}
+export function mapPathToBreadcrumbs(path: string, userMenus: any[]) {
+  const breadcrumbs: IBreadcrumbs[] = []
+  for (const menu of userMenus) {
+    for (const submenu of menu.children) {
+      if (submenu.url === path) {
+        breadcrumbs.push({ name: menu.name, path: menu.url })
+        breadcrumbs.push({ name: submenu.name, path: submenu.url })
+      }
+    }
+  }
+
+  return breadcrumbs
 }

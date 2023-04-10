@@ -17,16 +17,11 @@
 <script setup lang="ts">
 import mainMenu from '@/components/main-menu/main-menu.vue'
 import mainHeader from '@/components/main-header/main-header.vue'
-import { ref } from 'vue';
+import { ref } from 'vue'
 const isFold = ref(false)
-const isFoldChange =(e:boolean)=>{
+const isFoldChange = (e: boolean) => {
   isFold.value = e
 }
-
-
-
-
-
 </script>
 
 <style lang="less" scoped>
@@ -50,7 +45,7 @@ const isFoldChange =(e:boolean)=>{
     background-color: #fff;
   }
   .el-main {
-    // background-color: gray;
+    background-color: #f0f2f5;
   }
 }
 </style>

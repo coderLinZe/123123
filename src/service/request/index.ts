@@ -68,13 +68,7 @@ class ZERequest {
     // 单次请求的成功拦截处理
     if (config.interceptors?.requestSuccessFn) {
       config = config.interceptors.requestSuccessFn(config)
-      this.loading = ElLoading.service({
-        lock: true,
-        text: 'Loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
     }
-
     // 返回Promise
     return new Promise<T>((resolve, reject) => {
       this.instance
@@ -83,8 +77,6 @@ class ZERequest {
           // 单词响应的成功拦截处理
           if (config.interceptors?.responseSuccessFn) {
             res = config.interceptors.responseSuccessFn(res)
-            // 将loading移除
-            this.loading?.close()
           }
           resolve(res)
         })

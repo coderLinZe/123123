@@ -1,8 +1,7 @@
 <template>
   <div class="app">
-    <pageSearch @query-click="handleQueryClick" :searchConfig="searchConfig"></pageSearch>
+    <pageSearch @query-click="handleQueryClick"></pageSearch>
 
-    
     <pageContent
       ref="contentRef"
       @edit-click="handleEditClick"
@@ -14,10 +13,9 @@
 </template>
 
 <script setup lang="ts">
-import pageSearch from '@/components/page-search/page-search.vue'
-import pageContent from '@/components/page-content/page-content.vue'
+import pageSearch from './c-cpns/page-search.vue'
+import pageContent from './c-cpns/page-content.vue'
 import pageModal from './c-cpns/page-modal.vue'
-import searchConfig from './config/search-config'
 import { ref } from 'vue'
 
 const contentRef = ref<InstanceType<typeof pageContent>>()

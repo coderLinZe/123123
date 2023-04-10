@@ -4,6 +4,7 @@ import type { IAccount } from '@/types'
 import localCache from '@/utils/localCache'
 import router from '@/router'
 import { mapMenusToRoutes } from '@/utils/map-menus'
+import useMianStore from '../main/main'
 interface ILoginState {
   token: string
   userInfo: any
@@ -40,6 +41,10 @@ const useLoginStore = defineStore('login', {
       localCache.setCache('userInfo', userInfo)
       localCache.setCache('userMenus', userMenus)
 
+      // 6.请求所有角色与部门数据
+      const mianStore = useMianStore()
+      mianStore.fetchEntireRolesAction()
+
       const routes = mapMenusToRoutes(userMenus)
       routes.forEach((route) => router.addRoute('main', route))
       //页面跳转
@@ -47,6 +52,7 @@ const useLoginStore = defineStore('login', {
     },
 
     loadLocalCacheAction() {
+      // 用户进行刷新默认加载数据
       const token = localCache.getCache('token')
       const userInfo = localCache.getCache('userInfo')
       const userMenus = localCache.getCache('userMenus')
@@ -54,6 +60,12 @@ const useLoginStore = defineStore('login', {
         this.token = token
         this.userInfo = userInfo
         this.userMenus = userMenus
+
+        //请求所有角色与部门数据
+        const mianStore = useMianStore()
+        mianStore.fetchEntireRolesAction()
+
+        // 动态添加路由
         const routes = mapMenusToRoutes(userMenus)
         routes.forEach((route) => router.addRoute('main', route))
       }

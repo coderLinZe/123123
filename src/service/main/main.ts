@@ -19,3 +19,9 @@ export function getEntireDepartment() {
     }
   })
 }
+
+export function getEntireMenus() {
+  return zeRequest.post({
+    url: `/menu/list`
+  })
+}

@@ -3,19 +3,21 @@ import { accountLoginRequest, getUserInfoById, getUserMenuByRoleId } from '@/ser
 import type { IAccount } from '@/types'
 import localCache from '@/utils/localCache'
 import router from '@/router'
-import { mapMenusToRoutes } from '@/utils/map-menus'
-import useMianStore from '../main/main'
+import { mapMenusToPermissions, mapMenusToRoutes } from '@/utils/map-menus'
+import useMainStore from '../main/main'
 interface ILoginState {
   token: string
   userInfo: any
   userMenus: any
+  permissions: string[]
 }
 
 const useLoginStore = defineStore('login', {
   state: (): ILoginState => ({
     token: '',
     userInfo: {},
-    userMenus: []
+    userMenus: [],
+    permissions: []
   }),
 
   getters: {},
@@ -42,9 +44,14 @@ const useLoginStore = defineStore('login', {
       localCache.setCache('userMenus', userMenus)
 
       // 6.请求所有角色与部门数据
-      const mianStore = useMianStore()
-      mianStore.fetchEntireRolesAction()
+      const mainStore = useMainStore()
+      mainStore.fetchEntireRolesAction()
 
+      // ******获取登录用户的所有按钮权限
+      const permissions = mapMenusToPermissions(userMenus)
+      this.permissions = permissions
+
+      // 动态添加路由
       const routes = mapMenusToRoutes(userMenus)
       routes.forEach((route) => router.addRoute('main', route))
       //页面跳转
@@ -62,8 +69,12 @@ const useLoginStore = defineStore('login', {
         this.userMenus = userMenus
 
         //请求所有角色与部门数据
-        const mianStore = useMianStore()
-        mianStore.fetchEntireRolesAction()
+        const mainStore = useMainStore()
+        mainStore.fetchEntireRolesAction()
+
+        // ******获取登录用户的所有按钮权限
+        const permissions = mapMenusToPermissions(userMenus)
+        this.permissions = permissions
 
         // 动态添加路由
         const routes = mapMenusToRoutes(userMenus)

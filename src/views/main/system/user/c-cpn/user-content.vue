@@ -40,7 +40,7 @@
               text
               @click="handleEditClick(scope.row)"
             >
-              修改
+            编辑
             </el-button>
             <el-button
               type="danger"
@@ -126,7 +126,6 @@ const handleDeleteClick = (id: number) => {
         duration: 800
       })
 
-      console.log('取消')
     })
 }
 

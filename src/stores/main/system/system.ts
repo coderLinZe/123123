@@ -10,6 +10,7 @@ import {
 } from '@/service/main/system/system'
 import { defineStore } from 'pinia'
 import type { IUser } from './type'
+import useMainStore from '../main'
 
 interface ISystemStore {
   usersList: IUser[]
@@ -60,24 +61,36 @@ const useSystemStore = defineStore('system', {
     async postPageListDataAction(pageName: string, queryInfo: any) {
       const pageListResult = await postPageListData(pageName, queryInfo)
       this.pageList = pageListResult.data.list
-      this.pageTotalCount = pageListResult.data.totalCount
+      this.pageTotalCount = parseInt(pageListResult.data.totalCount)
     },
     // 删除数据
     async deletePageByIdAction(pageName: string, id: number) {
       const deleteResult = await deletePageById(pageName, id)
       console.log(deleteResult)
       this.postPageListDataAction(pageName, { offset: 0, size: 10 })
+
+      // 重新发送请求，获取最新完整数据
+      const mainStore = useMainStore()
+      mainStore.fetchEntireRolesAction()
     },
     // 修改数据
     async editPageDataAction(pageName: string, id: number, queryInfo: any) {
       const editResult = await editPageData(pageName, id, queryInfo)
       console.log(editResult)
-      this.postPageListDataAction(pageName, { offset: 0, size: 10 })
+      this.postPageListDataAction(pageName, { offset: 0, size: 10 } )
+
+       // 重新发送请求，获取最新完整数据
+       const mainStore = useMainStore()
+       mainStore.fetchEntireRolesAction()
     },
+    // 新建数据
     async newPageDataAction(pageName: string, queryInfo: any) {
       const newPageResult = await newPageData(pageName, queryInfo)
       console.log(newPageResult)
       this.postPageListDataAction(pageName, { offset: 0, size: 10 })
+      // 重新发送请求，获取最新完整数据
+      const mainStore = useMainStore()
+      mainStore.fetchEntireRolesAction()
     }
   }
 })

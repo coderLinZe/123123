@@ -33,6 +33,8 @@ class ZERequest {
       },
       (err) => {
         // console.log('全局请求失败的拦截')
+        // 将loading移除
+        this.loading?.close()
         return err
       }
     )
@@ -45,6 +47,8 @@ class ZERequest {
       },
       (err) => {
         // console.log('全局响应失败的拦截')
+        // 将loading移除
+        this.loading?.close()
         return err
       }
     )

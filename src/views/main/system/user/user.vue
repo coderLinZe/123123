@@ -1,35 +1,66 @@
 <template>
   <div class="user">
-    <userSearch @query-click="handleQueryClick"></userSearch>
-
-    <UserContent
-      @new-click="handleNewClick"
+    <PageSearch
+      :search-config="searchConfig"
+      @query-click="handleQueryClick"
+      @reset-click="handleResetClick"
+    ></PageSearch>
+    <pageContent
+      :content-config="contentConfig"
       ref="contentRef"
       @edit-click="handleEditClick"
-    ></UserContent>
-
-    <UserModal ref="newClickRef"></UserModal>
+      @new-click="handleNewClick"
+    ></pageContent>
+    <pageModal :modal-config="modalConfigRef" ref="modalRef"> </pageModal>
   </div>
 </template>
 
-<script setup lang="ts" name="user">
-import { ref } from 'vue'
-import UserContent from './c-cpn/user-content.vue'
-import userSearch from './c-cpn/user-search.vue'
-import UserModal from './c-cpn/user-modal.vue'
+<script setup lang="ts">
+import { computed } from 'vue'
+import PageSearch from '@/components/page-search/page-search.vue'
+import searchConfig from './config/search-config'
+import pageContent from '@/components/page-content/page-content.vue'
+import contentConfig from './config/content-config'
+import pageModal from '@/components/page-modal/page-modal.vue'
+import modalConfig from './config/modal-config'
+import usePageContent from '@/hooks/usePageContent'
+import usePageModal from '@/hooks/usePageModal'
+import useMainStore from '@/stores/main/main'
 
-const contentRef = ref<InstanceType<typeof UserContent>>()
-const handleQueryClick = (fromDate: any) => {
-  contentRef.value?.fetchUserListDate(fromDate)
-}
+// 对modalConfig进行操作
+const modalConfigRef = computed(() => {
+  const mainStore = useMainStore()
 
-const newClickRef = ref<InstanceType<typeof UserModal>>()
-const handleNewClick = () => {
-  newClickRef.value?.setModelVisibl()
-}
-const handleEditClick = (itemData: any) => {
-  newClickRef.value?.setModelVisibl(false, itemData)
-}
+  const departmentItem = modalConfig.formItems.find((item) => item.prop === 'departmentId')
+  departmentItem!.options = mainStore.entireDepartment.map((item: any) => {
+    return { label: item.name, value: item.id }
+  })
+
+  const roleItem = modalConfig.formItems.find((item) => item.prop === 'roleId')
+  roleItem!.options = mainStore.entireRoles.map((item: any) => {
+    return { label: item.name, value: item.id }
+  })
+
+  // const departments = mainStore.entireDepartment.map((item: any) => {
+  //   return { label: item.name, value: item.id }
+  // })
+  // const roles = mainStore.entireRoles.map((item: any) => {
+  //   return { label: item.name, value: item.id }
+  // })
+
+  // modalConfig.formItems.forEach((item) => {
+  //   if (item.prop === 'departmentId') {
+  //     item.options.push(...departments)
+  //   } else if (item.prop === 'roleId') {
+  //     item.options.push(...roles)
+  //   }
+  // })
+
+  return modalConfig
+})
+
+const { contentRef, handleQueryClick, handleResetClick } = usePageContent()
+const { modalRef, handleEditClick, handleNewClick } = usePageModal()
 </script>
 
 <style scoped>

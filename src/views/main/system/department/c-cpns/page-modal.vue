@@ -25,7 +25,7 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import useMianStore from '@/stores/main/main'
+import useMainStore from '@/stores/main/main'
 import useSystemStore from '@/stores/main/system/system'
 import type { ElForm } from 'element-plus'
 import { storeToRefs } from 'pinia'
@@ -42,7 +42,7 @@ const isNewRef = ref(true)
 const dialogVisible = ref(false)
 const ruleFormRef = ref<InstanceType<typeof ElForm>>()
 
-const setModelVisibl = (isNew: boolean = true, itemData?: any) => {
+const setModelVisible = (isNew: boolean = true, itemData?: any) => {
   dialogVisible.value = true
   isNewRef.value = isNew
   // isNewRef = false修改
@@ -62,9 +62,9 @@ const setModelVisibl = (isNew: boolean = true, itemData?: any) => {
   }
 }
 
-const mianStore = useMianStore()
+const mainStore = useMainStore()
 const systemStore = useSystemStore()
-const { entireDepartment } = storeToRefs(mianStore)
+const { entireDepartment } = storeToRefs(mainStore)
 
 // 确定按钮操作
 const handleConfirmClick = () => {
@@ -79,7 +79,7 @@ const handleConfirmClick = () => {
 }
 
 defineExpose({
-  setModelVisibl
+  setModelVisible
 })
 </script>
 <style scoped>

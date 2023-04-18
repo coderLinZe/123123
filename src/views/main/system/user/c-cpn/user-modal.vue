@@ -46,7 +46,7 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import useMianStore from '@/stores/main/main'
+import useMainStore from '@/stores/main/main'
 import useSystemStore from '@/stores/main/system/system'
 
 import type { ElForm } from 'element-plus'
@@ -66,10 +66,10 @@ const isNewRef = ref(true)
 // 获取用户/部门数据
 const dialogVisible = ref(false)
 const ruleFormRef = ref<InstanceType<typeof ElForm>>()
-const setModelVisibl = (isNew: boolean = true, itemData?: any) => {
+const setModelVisible = (isNew: boolean = true, itemData?: any) => {
   dialogVisible.value = true
   isNewRef.value = isNew
-  // isNewRef = false修改
+  // isNewRef = false编辑
   // isNewRef = true新建
   // 编辑用户
   if (!isNew && itemData) {
@@ -86,9 +86,9 @@ const setModelVisibl = (isNew: boolean = true, itemData?: any) => {
   }
 }
 
-const mianStore = useMianStore()
+const mainStore = useMainStore()
 const systemStore = useSystemStore()
-const { entireRoles, entireDepartment } = storeToRefs(mianStore)
+const { entireRoles, entireDepartment } = storeToRefs(mainStore)
 
 // 确定按钮操作
 const handleConfirmClick = () => {
@@ -103,7 +103,7 @@ const handleConfirmClick = () => {
 }
 
 defineExpose({
-  setModelVisibl
+  setModelVisible
 })
 </script>
 <style scoped>

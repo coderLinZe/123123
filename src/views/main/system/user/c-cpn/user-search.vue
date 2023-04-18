@@ -56,7 +56,7 @@
 
     <div class="btn">
       <el-button icon="Refresh" @click="resetBtnClick">重置</el-button>
-      <el-button type="primary" icon="Search" @click="SearchBtnClick">搜索</el-button>
+      <el-button type="primary" icon="Search" @click="searchBtnClick">搜索</el-button>
     </div>
   </div>
 </template>
@@ -71,15 +71,16 @@ const searchFrom = reactive({
   enable: 1,
   createAt: ''
 })
-const emit = defineEmits(['queryClick'])
+const emit = defineEmits(['queryClick','resetClick'])
 const formRef = ref<InstanceType<typeof ElForm>>()
-const SearchBtnClick = () => {
+const searchBtnClick = () => {
   emit('queryClick', searchFrom)
 }
 
 // 重置操作
 const resetBtnClick = () => {
   formRef.value?.resetFields()
+  emit('resetClick')
 }
 </script>
 

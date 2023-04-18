@@ -1,7 +1,11 @@
 <template>
   <div class="login-panel">
-    <h1 class="title">后台管理系统</h1>
 
+    <div class="left">
+      
+    </div>
+  <div class="right">
+    <h1 class="title">后台管理系统</h1>
     <div class="tabs">
       <el-tabs type="border-card" stretch v-model="activeName">
         <!-- 账号登录 -->
@@ -38,6 +42,10 @@
       >
     </div>
   </div>
+
+
+   
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -50,7 +58,6 @@ const rememberPwd = ref<boolean>(localCache.getCache('rememberPwd') ?? true)
 
 watch(rememberPwd, (newValue) => {
   localCache.setCache('rememberPwd', newValue)
-  // console.log(newValue)
 })
 
 // 没有默认值 写泛型类型

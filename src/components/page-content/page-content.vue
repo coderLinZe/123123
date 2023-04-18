@@ -1,55 +1,83 @@
 <template>
   <div class="content">
-    <div class="header">
-      <h3>用户列表</h3>
-      <el-button type="primary" @click="newClick">新建部门</el-button>
+    <div class="header" v-if="isCreate">
+      <h3>{{ contentConfig?.header?.title ?? '数据列表' }}</h3>
+      <el-button type="primary" @click="newClick" v-if="contentConfig?.header?.btnTitle">
+        {{ contentConfig?.header?.btnTitle ?? '新建数据' }}
+      </el-button>
     </div>
     <div class="table">
-      <el-table :data="pageList" border style="width: 100%">
-        <el-table-column align="center" type="selection" width="80" />
-        <el-table-column align="center" type="index" label="序号" width="80" />
-        <el-table-column align="center" prop="name" label="部门名称" width="130" />
-        <el-table-column align="center" prop="leader" label="部门领导" width="130" />
-        <el-table-column align="center" prop="parentId" label="上级部门" width="130" />
+      <el-table :data="pageList" border style="width: 100%" v-bind="contentConfig.childrenTree">
+        <template v-for="item in contentConfig.propsList" :key="item.prop">
+          <template v-if="item.type === 'timer'">
+            <el-table-column v-bind="item" align="center">
+              <!-- 作用域插槽 -->
+              <template #default="scope">
+                {{ formatUTC(scope.row[item.prop]) }}
+              </template>
+            </el-table-column>
+          </template>
 
-        <el-table-column align="center" prop="createAt" label="创建时间">
-          <!-- 作用域插槽 -->
-          <template #default="scope">
-            {{ formatUTC(scope.row.createAt) }}
+          <template v-else-if="item.type === 'enable'">
+            <el-table-column align="center" v-bind="item">
+              <!-- 作用域插槽 -->
+              <template #default="scope">
+                <el-button
+                  class="enable"
+                  :type="scope.row.enable ? 'success' : 'danger'"
+                  plain
+                  size="small"
+                >
+                  {{ scope.row.enable ? '启用' : '禁用' }}
+                </el-button>
+              </template>
+            </el-table-column>
           </template>
-        </el-table-column>
-        <el-table-column align="center" prop="updateAt" label="更新时间">
-          <!-- 作用域插槽 -->
-          <template #default="scope">
-            {{ formatUTC(scope.row.updateAt) }}
+
+          <template v-else-if="item.type === 'handler'">
+            <el-table-column align="center" v-bind="item" v-if="isUpdate || isDelete">
+              <template #default="scope">
+                <el-button
+                  v-if="isUpdate"
+                  type="primary"
+                  size="small"
+                  icon="Edit"
+                  text
+                  @click="handleEditClick(scope.row)"
+                >
+                  编辑
+                </el-button>
+                <el-button
+                  v-if="isDelete"
+                  type="danger"
+                  size="small"
+                  icon="Delete"
+                  text
+                  @click="handleDeleteClick(scope.row.id)"
+                >
+                  删除
+                </el-button>
+              </template>
+            </el-table-column>
           </template>
-        </el-table-column>
-        <el-table-column align="center" prop="operate" label="操作" width="150">
-          <template #default="scope">
-            <el-button
-              type="primary"
-              size="small"
-              icon="Edit"
-              text
-              @click="handleEditClick(scope.row)"
-            >
-              修改
-            </el-button>
-            <el-button
-              type="danger"
-              size="small"
-              icon="Delete"
-              text
-              @click="handleDeleteClick(scope.row.id)"
-            >
-              删除
-            </el-button>
+
+          <!-- 动态插入剩余的插槽 -->
+          <template v-else-if="item.type === 'custom'">
+            <el-table-column align="center" v-bind="item">
+              <template #default="scope">
+                <slot :name="item.slotName" v-bind="scope"></slot>
+              </template>
+            </el-table-column>
           </template>
-        </el-table-column>
+
+          <template v-else>
+            <el-table-column show-overflow-tooltip align="center" v-bind="item"> </el-table-column>
+          </template>
+        </template>
       </el-table>
     </div>
 
-    <div class="paging">
+    <div class="paging" v-if="isPagination ?? true">
       <el-pagination
         v-model:current-page="currentPage"
         v-model:page-size="pageSize"
@@ -64,35 +92,74 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import useSystemStore from '@/stores/main/system/system'
 import { formatUTC } from '@/utils/format'
 import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
+import usePermissions from '@/hooks/usePermissions'
 
+interface IProps {
+  contentConfig: {
+    pageName: string
+    isPagination?: boolean
+    header?: {
+      title?: string
+      btnTitle?: string
+    }
+    propsList: any[]
+    childrenTree?: any
+  }
+}
+
+const props = defineProps<IProps>()
 const emit = defineEmits(['newClick', 'editClick'])
 
+const isCreate = usePermissions(`${props.contentConfig.pageName}:create`)
+
+const isDelete = usePermissions(`${props.contentConfig.pageName}:delete`)
+const isUpdate = usePermissions(`${props.contentConfig.pageName}:update`)
+const isQuery = usePermissions(`${props.contentConfig.pageName}:query`)
 const systemStore = useSystemStore()
 const currentPage = ref(1)
 const pageSize = ref(10)
-const { pageList, pageTotalCount } = storeToRefs(systemStore)
-const fetchPageListDate = (fromDate: any = {}) => {
-  // 获取offset/size
-  const size = pageSize.value
-  const offset = (currentPage.value - 1) * size
-  const info = { size, offset }
-  const pageInfo = { ...info, ...fromDate }
-  // 发起网络请求
-  systemStore.postPageListDataAction('department', pageInfo)
-}
+const isPagination = ref(props.contentConfig.isPagination)
+//分页回到第一页
+// after 网络请求成功后执行
+systemStore.$onAction(({ name, after }) => {
+  after(() => {
+    if (
+      name === 'deletePageByIdAction' ||
+      name === 'editPageDataAction' ||
+      name === 'newPageDataAction'
+    ) {
+      currentPage.value = 1
+    }
+  })
+})
 
 fetchPageListDate()
+
+const { pageList, pageTotalCount } = storeToRefs(systemStore)
+
 const handleSizeChange = () => {
   fetchPageListDate()
 }
 const handleCurrentChange = () => {
   fetchPageListDate()
 }
+function fetchPageListDate(fromDate: any = {}) {
+  if (!isQuery) return
+  // 获取offset/size
+  const size = pageSize.value
+  const offset = (currentPage.value - 1) * size
+  const info = { size, offset }
+  const pageInfo = { ...info, ...fromDate }
+
+  // 发起网络请求
+  systemStore.postPageListDataAction(props.contentConfig.pageName, pageInfo)
+}
+
 const newClick = () => {
   emit('newClick')
 }
@@ -105,22 +172,14 @@ const handleDeleteClick = (id: number) => {
     type: 'warning'
   })
     .then(() => {
-      systemStore.deletePageByIdAction('department', id)
+      systemStore.deletePageByIdAction(props.contentConfig.pageName, id)
       ElMessage({
         type: 'success',
         message: '删除成功',
         duration: 800
       })
     })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '取消',
-        duration: 800
-      })
-
-      console.log('取消')
-    })
+    .catch(() => {})
 }
 
 const handleEditClick = (itemData: any) => {
@@ -143,11 +202,13 @@ defineExpose({
   .enable {
     padding: 5px 12px;
   }
+  :deep(.el-table__body-wrapper .el-table-column--selection > .cell) {
+    flex-direction: column;
+  }
 }
 
 .content {
   background-color: #fff;
-  margin-top: 20px;
   padding: 20px;
   .header {
     display: flex;

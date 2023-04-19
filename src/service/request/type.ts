@@ -9,4 +9,6 @@ export interface ZEInterceptors<T = AxiosResponse> {
 
 export interface ZEConfig<T = AxiosResponse> extends AxiosRequestConfig {
   interceptors?: ZEInterceptors<T>
+  isLoading?: boolean
+  showLoading?: boolean
 }

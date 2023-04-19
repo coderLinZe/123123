@@ -24,7 +24,8 @@ const modalConfig:IModalConfig = {
       type: 'input',
       label: '用户密码',
       prop: 'password',
-      placeholder: '请输入用户密码'
+      placeholder: '请输入用户密码',
+      isHidden: false
     },
     {
       type: 'input',

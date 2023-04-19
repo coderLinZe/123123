@@ -1,6 +1,7 @@
 <template>
   <div class="login">
     <LoginPanel></LoginPanel>
+    <a class="a" href="https://beian.miit.gov.cn/" target="_blank">冀ICP备2021025046号</a>
   </div>
 </template>
 
@@ -15,5 +16,12 @@ import LoginPanel from './c-cpns/login-panel.vue'
   display: flex;
   align-items: center;
   justify-content: center;
+  background: url(@/assets/img/login-bg.svg);
+  .a {
+    position: absolute;
+    top: 10px;
+    justify-content: center;
+    color: gray;
+  }
 }
 </style>

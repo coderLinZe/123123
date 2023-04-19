@@ -1,11 +1,14 @@
 <template>
   <div class="crumb">
-    <el-breadcrumb separator-icon="ArrowRight">
+       <el-breadcrumb separator-icon="ArrowRight">
       <template v-for="item in breadcrumb" :key="item.name">
         <el-breadcrumb-item :to="{ path: item.path }">{{ item.name }}</el-breadcrumb-item>
       </template>
     </el-breadcrumb>
-  </div>
+
+ 
+    </div>
+    
 </template>
 
 <script setup lang="ts">
@@ -20,4 +23,10 @@ const breadcrumb = computed(() => {
 })
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+
+.crumb{
+  display: flex;
+  align-items: center;
+}
+</style>

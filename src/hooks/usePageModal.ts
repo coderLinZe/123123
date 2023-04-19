@@ -18,7 +18,6 @@ function usePageModal(editCallback?: CallbackFunType, newCallback?: CallbackFunT
   const handleNewClick = () => {
     // 新建数据 input为空
     modalRef.value?.setModelVisible()
-
     if (newCallback) newCallback()
   }
 

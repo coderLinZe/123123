@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="box">
     <el-card class="overview">
       <template #header>
         <div class="card-header">
@@ -11,11 +11,11 @@
         等后台系统解决方案。</span
       >
     </el-card>
-  </div>
   <overviewCard></overviewCard>
   <overviewStructure :code="projectDir"></overviewStructure>
   <overviewSpecification></overviewSpecification>
   <overviewGit></overviewGit>
+</div>
 </template>
 <script setup lang="ts">
 import overviewCard from './c-cpns/overview-card.vue'
@@ -26,6 +26,13 @@ import {projectDir} from './config/project-dir'
 </script>
 
 <style lang="less" scoped>
+
+
+.box{
+ // 阻止双击 被选取 或高亮 显示
+//  user-select: none;
+}
+
 .overview {
   margin-bottom: 20px;
   .card-header {

@@ -11,6 +11,7 @@ import {
 import { defineStore } from 'pinia'
 import type { IUser } from './type'
 import useMainStore from '../main'
+import { ElMessage } from 'element-plus'
 
 interface ISystemStore {
   usersList: IUser[]
@@ -68,7 +69,6 @@ const useSystemStore = defineStore('system', {
       const deleteResult = await deletePageById(pageName, id)
       console.log(deleteResult)
       this.postPageListDataAction(pageName, { offset: 0, size: 10 })
-
       // 重新发送请求，获取最新完整数据
       const mainStore = useMainStore()
       mainStore.fetchEntireRolesAction()
@@ -76,6 +76,11 @@ const useSystemStore = defineStore('system', {
     // 修改数据
     async editPageDataAction(pageName: string, id: number, queryInfo: any) {
       const editResult = await editPageData(pageName, id, queryInfo)
+      ElMessage({
+        type: 'success',
+        message: editResult.data,
+        duration: 800
+      })
       console.log(editResult)
       this.postPageListDataAction(pageName, { offset: 0, size: 10 } )
 
@@ -87,6 +92,11 @@ const useSystemStore = defineStore('system', {
     async newPageDataAction(pageName: string, queryInfo: any) {
       const newPageResult = await newPageData(pageName, queryInfo)
       console.log(newPageResult)
+      ElMessage({
+        type: 'success',
+        message: newPageResult.data,
+        duration: 800
+      })
       this.postPageListDataAction(pageName, { offset: 0, size: 10 })
       // 重新发送请求，获取最新完整数据
       const mainStore = useMainStore()

@@ -7,7 +7,7 @@
   >
     <el-form :model="formData" label-width="80px" size="large">
       <template v-for="item in modalConfig.formItems" :key="item.prop">
-        <el-form-item :label="item.label" :prop="item.prop">
+        <el-form-item :label="item.label" :prop="item.prop" v-if="!item.isHidden">
           <template v-if="item.type === 'input'">
             <el-input v-model="formData[item.prop]" :placeholder="item.placeholder" />
           </template>
@@ -108,12 +108,12 @@ const handleConfirmClick = () => {
   if (props.otherInfo) {
     infoData = { ...infoData, ...props.otherInfo }
   }
-
   // 编辑
   if (!isNewRef.value && editData.value) {
     systemStore.editPageDataAction(props.modalConfig.pageName, editData.value.id, infoData)
   } else {
     // 创建
+    console.log(infoData)
     systemStore.newPageDataAction(props.modalConfig.pageName, infoData)
   }
 }

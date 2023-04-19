@@ -63,8 +63,6 @@ const defaultActive = computed(() => {
 .el-menu {
   background-color: #001529;
   border-right: none;
-  // 如果您在文本上双击，文本会被选取或高亮显示。此属性用于阻止这种行为
-  user-select: none;
 }
 
 .main-top {

@@ -59,13 +59,12 @@ const editCallback = (queryClick: any) => {
     treeRef.value?.setCheckedKeys(menuIds)
   })
 }
-const { modalRef, handleEditClick, handleNewClick } = usePageModal(editCallback,newCallback)
+const { modalRef, handleEditClick, handleNewClick } = usePageModal(editCallback, newCallback)
 const otherInfo = ref({})
 
 const handleElTreeCheck = (data1: any, data2: any) => {
   const menuList = [...data2.checkedKeys, ...data2.halfCheckedKeys]
   otherInfo.value = { menuList }
-  
 }
 </script>
 

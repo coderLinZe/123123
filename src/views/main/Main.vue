@@ -26,8 +26,6 @@ const isFoldChange = (e: boolean) => {
 
 <style lang="less" scoped>
 .main {
-  // 阻止双击 被选取 或高亮 显示
-  user-select: none;
   height: 100%;
 }
 

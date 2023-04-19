@@ -13,12 +13,19 @@ import type { LoadingInstance } from 'element-plus/es/components/loading/src/loa
  *
  *  2.响应结果的类型处理(泛型)
  */
+
+// const DEAFULT_LOADING = true
+
 class ZERequest {
   loading?: LoadingInstance
+  // showLoading: boolean
   instance: AxiosInstance
   // request实例 => axios的实例
   constructor(config: ZEConfig) {
+    // axios的实例
     this.instance = axios.create(config)
+    // 保存基本信息
+    // this.showLoading = config.showLoading ?? DEAFULT_LOADING
     // 每个instance实例都添加拦截器
     this.instance.interceptors.request.use(
       (config) => {

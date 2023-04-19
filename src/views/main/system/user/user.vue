@@ -27,6 +27,17 @@ import usePageContent from '@/hooks/usePageContent'
 import usePageModal from '@/hooks/usePageModal'
 import useMainStore from '@/stores/main/main'
 
+//1.处理密码相关逻辑
+const newCallback = () => {
+  const passwordItem = modalConfig.formItems.find((item) => item.prop === 'password')
+  passwordItem!.isHidden = false
+}
+const editCallback = () => {
+  const passwordItem = modalConfig.formItems.find((item) => item.prop === 'password')
+  passwordItem!.isHidden = true
+}
+
+
 // 对modalConfig进行操作
 const modalConfigRef = computed(() => {
   const mainStore = useMainStore()
@@ -60,7 +71,7 @@ const modalConfigRef = computed(() => {
 })
 
 const { contentRef, handleQueryClick, handleResetClick } = usePageContent()
-const { modalRef, handleEditClick, handleNewClick } = usePageModal()
+const { modalRef, handleEditClick, handleNewClick } = usePageModal(editCallback,newCallback)
 </script>
 
 <style scoped>

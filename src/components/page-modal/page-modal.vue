@@ -113,7 +113,6 @@ const handleConfirmClick = () => {
     systemStore.editPageDataAction(props.modalConfig.pageName, editData.value.id, infoData)
   } else {
     // 创建
-    console.log(infoData)
     systemStore.newPageDataAction(props.modalConfig.pageName, infoData)
   }
 }

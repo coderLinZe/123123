@@ -21,6 +21,7 @@ const props = defineProps<IProps>()
 
 const option = computed<EChartsOption>(() => {
   return {
+    
     tooltip: {
       trigger: 'item'
     },

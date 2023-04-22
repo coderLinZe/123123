@@ -18,6 +18,15 @@ const props = defineProps<IProps>()
 
 const option = computed<EChartsOption>(() => {
   return {
+    toolbox: {
+    show: true,
+    feature: {
+      mark: { show: true },
+      dataView: { show: true, readOnly: false },
+      restore: { show: true },
+      saveAsImage: { show: true }
+    }
+  },
     title: {
       text: '支持鼠标滚动缩放',
     },

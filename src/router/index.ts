@@ -30,7 +30,6 @@ router.beforeEach((to) => {
   if (to.path === '/main' && !token) {
     return '/login'
   }
-
   if (to.path === '/main') {
     return firstMenu?.url
   }

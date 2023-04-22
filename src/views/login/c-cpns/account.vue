@@ -47,10 +47,8 @@ const loginAction = (rememberPwd: Boolean) => {
       // 1.获取用户输入的账号和密码
       const name = account.name
       const password = account.password
-
       // 2.携带账号密码发送网络请求
-      loginStore
-        .loginAccountAction({
+      loginStore.loginAccountAction({
           name,
           password
         })

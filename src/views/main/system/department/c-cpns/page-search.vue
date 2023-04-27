@@ -16,7 +16,7 @@
         </el-col>
 
         <el-col :span="8">
-          <el-form-item label="部门领导" prop="name">
+          <el-form-item label="部门领导" prop="leader">
             <el-input v-model="searchForm.leader" placeholder="请输入部门领导" />
           </el-form-item>
           <div class="grid-content ep-bg-purple" />

@@ -60,7 +60,7 @@ class ZERequest {
       }
     )
 
-    // 针对特定的hyRequest实例添加拦截器
+    // 针对特定的Request实例添加拦截器
     if (config.interceptors) {
       this.instance.interceptors.request.use(
         config.interceptors.requestSuccessFn,

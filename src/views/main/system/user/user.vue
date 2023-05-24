@@ -5,12 +5,15 @@
       @query-click="handleQueryClick"
       @reset-click="handleResetClick"
     ></PageSearch>
-    <pageContent
-      :content-config="contentConfig"
-      ref="contentRef"
-      @edit-click="handleEditClick"
-      @new-click="handleNewClick"
-    ></pageContent>
+    <div class="content">
+      <pageContent
+        :content-config="contentConfig"
+        ref="contentRef"
+        @edit-click="handleEditClick"
+        @new-click="handleNewClick"
+      ></pageContent>
+    </div>
+
     <pageModal :modal-config="modalConfigRef" ref="modalRef"> </pageModal>
   </div>
 </template>
@@ -36,7 +39,6 @@ const editCallback = () => {
   const passwordItem = modalConfig.formItems.find((item) => item.prop === 'password')
   passwordItem!.isHidden = true
 }
-
 
 // 对modalConfig进行操作
 const modalConfigRef = computed(() => {
@@ -71,12 +73,16 @@ const modalConfigRef = computed(() => {
 })
 
 const { contentRef, handleQueryClick, handleResetClick } = usePageContent()
-const { modalRef, handleEditClick, handleNewClick } = usePageModal(editCallback,newCallback)
+const { modalRef, handleEditClick, handleNewClick } = usePageModal(editCallback, newCallback)
 </script>
 
 <style scoped>
 .user {
   border-radius: 5px;
   overflow: hidden;
+}
+
+.content {
+  margin-top: 20px;
 }
 </style>

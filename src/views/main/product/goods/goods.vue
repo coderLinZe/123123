@@ -5,29 +5,30 @@
       @query-click="handleQueryClick"
       @reset-click="handleResetClick"
     ></pageSearch>
+    <div class="content">
+      <pageContent
+        :content-config="contentConfig"
+        @edit-click="handleEditClick"
+        @new-click="handleNewClick"
+        ref="contentRef"
+      >
+        <template #image="scope">
+          <el-image
+            style="width: 60px; height: 60px"
+            :src="scope.row.imgUrl"
+            :preview-src-list="[scope.row.imgUrl]"
+            preview-teleported
+          />
+        </template>
 
-    <pageContent
-      :content-config="contentConfig"
-      @edit-click="handleEditClick"
-      @new-click="handleNewClick"
-      ref="contentRef"
-    >
-      <template #image="scope">
-        <el-image
-          style="width: 60px; height: 60px"
-          :src="scope.row.imgUrl"
-          :preview-src-list="[scope.row.imgUrl]"
-          preview-teleported
-        />
-      </template>
-
-      <template #oldP="scope">
-        {{ '￥ ' +  scope.row.oldPrice }}
-      </template>
-      <template #newP="scope">
-         {{'￥ ' + scope.row.newPrice }}
-      </template>
-    </pageContent>
+        <template #oldP="scope">
+          {{ '￥ ' + scope.row.oldPrice }}
+        </template>
+        <template #newP="scope">
+          {{ '￥ ' + scope.row.newPrice }}
+        </template>
+      </pageContent>
+    </div>
 
     <pageModal :modal-config="modalConfig" ref="modalRef"></pageModal>
   </div>
@@ -53,7 +54,10 @@ const { contentRef, handleQueryClick, handleResetClick } = usePageContent()
 const { modalRef, handleEditClick, handleNewClick } = usePageModal()
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .goods {
+  .content {
+    margin-top: 20px;
+  }
 }
 </style>

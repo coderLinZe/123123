@@ -82,8 +82,7 @@ class ZERequest {
     }
     // 返回Promise
     return new Promise<T>((resolve, reject) => {
-      this.instance
-        .request<any, T>(config)
+      this.instance.request<any, T>(config)
         .then((res) => {
           // 单词响应的成功拦截处理
           if (config.interceptors?.responseSuccessFn) {

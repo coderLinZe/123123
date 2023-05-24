@@ -6,12 +6,14 @@
       @reset-click="handleResetClick"
     >
     </PageSearch>
-    <pageContent
-      :content-config="contentConfig"
-      @edit-click="handleEditClick"
-      @new-click="handleNewClick"
-      ref="contentRef"
-    ></pageContent>
+    <div class="content">
+      <pageContent
+        :content-config="contentConfig"
+        @edit-click="handleEditClick"
+        @new-click="handleNewClick"
+        ref="contentRef"
+      ></pageContent>
+    </div>
 
     <pageModal :modal-config="modalConfig" ref="modalRef"></pageModal>
   </div>
@@ -36,7 +38,10 @@ const { contentRef, handleQueryClick, handleResetClick } = usePageContent()
 const { modalRef, handleEditClick, handleNewClick } = usePageModal()
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .category {
+  .content {
+    margin-top: 20px;
+  }
 }
 </style>

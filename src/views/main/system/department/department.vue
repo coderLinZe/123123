@@ -5,14 +5,16 @@
       @reset-click="handleResetClick"
       :search-config="searchConfig"
     ></pageSearch>
-
-    <pageContent
+<div class="content">
+  <pageContent
       ref="contentRef"
       @edit-click="handleEditClick"
       @new-click="handleNewClick"
       :content-config="contentConfig"
     >
     </pageContent>
+</div>
+   
 
     <pageModal ref="modalRef" :modal-config="modalConfigRef"></pageModal>
   </div>
@@ -62,4 +64,10 @@ const { contentRef, handleQueryClick, handleResetClick } = usePageContent()
 const { modalRef, handleEditClick, handleNewClick } = usePageModal()
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.app{
+  .content{
+    margin-top: 20px;
+  }
+}
+</style>

@@ -5,13 +5,15 @@
       @query-click="handleQueryClick"
       @reset-click="handleResetClick"
     ></pageSearch>
+    <div class="content">
+      <pageContent
+        :content-config="contentConfig"
+        @edit-click="handleEditClick"
+        @new-click="handleNewClick"
+        ref="contentRef"
+      ></pageContent>
+    </div>
 
-    <pageContent
-      :content-config="contentConfig"
-      @edit-click="handleEditClick"
-      @new-click="handleNewClick"
-      ref="contentRef"
-    ></pageContent>
     <pageModal :modal-config="modalConfig" ref="modalRef" :other-info="otherInfo">
       <template #menulist>
         <el-tree
@@ -68,7 +70,10 @@ const handleElTreeCheck = (data1: any, data2: any) => {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .role {
+  .content {
+    margin-top: 20px;
+  }
 }
 </style>

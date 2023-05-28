@@ -33,5 +33,11 @@ router.beforeEach((to) => {
   if (to.path === '/main') {
     return firstMenu?.url
   }
+  if (to.path === '/login') {
+    localCache.removeCache('token')
+    localCache.removeCache('userMenus')
+    localCache.removeCache('userInfo')
+  }
 })
+
 export default router

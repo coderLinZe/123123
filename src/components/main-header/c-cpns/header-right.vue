@@ -56,6 +56,8 @@ name.value = userInfo.name
 
 const exitClick = () => {
   localCache.removeCache('token')
+  localCache.removeCache('userMenus')
+  localCache.removeCache('userInfo')
   router.push('/login')
 }
 </script>

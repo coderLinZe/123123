@@ -1,48 +1,54 @@
 import type { RouteRecordRaw } from 'vue-router'
+
 function loadLocalRoutes() {
-  const localRouters: RouteRecordRaw[] = []
-  // 1.获取到router/main下面所有的.ts文件里面的路由对象
-  const files: Record<string, any> = import.meta.glob('@/router/main/**/*.ts', {
+  // 1.动态获取所有的路由对象, 放到数组中
+  // * 路由对象都在独立的文件中
+  // * 从文件中将所有路由对象先读取数组中
+  const localRoutes: RouteRecordRaw[] = []
+
+  // 1.1.读取router/main所有的ts文件
+  const files: Record<string, any> = import.meta.glob('../router/main/**/*.ts', {
     eager: true
   })
-  // 2.将加载的路由对象放进 localRouters
+  // 1.2.将加载的对象放到localRoutes
   for (const key in files) {
     const module = files[key]
-    localRouters.push(module.default)
+    localRoutes.push(module.default)
   }
-  return localRouters
-}
-export let firstMenu: any = null
 
+  return localRoutes
+}
+
+export let firstMenu: any = null
 export function mapMenusToRoutes(userMenus: any[]) {
-  // 加载本地路由
+  // 1.加载本地路由
   const localRoutes = loadLocalRoutes()
 
-  //根据菜单匹配正确路由
+  // 2.根据菜单去匹配正确的路由
   const routes: RouteRecordRaw[] = []
   for (const menu of userMenus) {
     for (const submenu of menu.children) {
       const route = localRoutes.find((item) => item.path === submenu.url)
-      // 添加动态路由
       if (route) {
-        // 将route的顶层菜单增加到重定向功能
+        // 1.给route的顶层菜单增加重定向功能(但是只需要添加一次即可)
         if (!routes.find((item) => item.path === menu.url)) {
-          // redirect 当用户输入路由和现有路由不匹配时跳转
           routes.push({ path: menu.url, redirect: route.path })
         }
-        // 将2级菜单对应的路径添加到routes
+        // 2.将二级菜单对应的路径
         routes.push(route)
       }
-      //   记录第一个匹配的菜单
+      // 记录第一个被匹配到的菜单
       if (firstMenu === null && route) firstMenu = submenu
     }
   }
+
   return routes
 }
+
 /**
- * 根据路径匹配需要显示的菜单
+ * 根据路径去匹配需要显示的菜单
  * @param path 需要匹配的路径
- * @param userMenus  所有的菜单
+ * @param userMenus 所有的菜单
  */
 export function mapPathToMenu(path: string, userMenus: any[]) {
   for (const menu of userMenus) {
@@ -54,30 +60,33 @@ export function mapPathToMenu(path: string, userMenus: any[]) {
   }
 }
 
-// 面包屑
 interface IBreadcrumbs {
   name: string
   path: string
 }
 export function mapPathToBreadcrumbs(path: string, userMenus: any[]) {
+  // 1.定义面包屑
   const breadcrumbs: IBreadcrumbs[] = []
+
+  // 2.遍历获取面包屑层级
   for (const menu of userMenus) {
     for (const submenu of menu.children) {
       if (submenu.url === path) {
+        // 1.顶层菜单
         breadcrumbs.push({ name: menu.name, path: menu.url })
+        // 2.匹配菜单
         breadcrumbs.push({ name: submenu.name, path: submenu.url })
       }
     }
   }
-
   return breadcrumbs
 }
 
 /**
- *  菜单映射到id的列表
- * @param menulist
+ * 菜单映射到id的列表
+ * @param menuList
  */
-export function mapMenuListToIds(menulist: any[]) {
+export function mapMenuListToIds(menuList: any[]) {
   const ids: number[] = []
 
   function recurseGetId(menus: any[]) {
@@ -89,29 +98,29 @@ export function mapMenuListToIds(menulist: any[]) {
       }
     }
   }
-  recurseGetId(menulist)
+  recurseGetId(menuList)
 
   return ids
 }
 
 /**
  * 从菜单映射到按钮的权限
- * @param menulist 菜单列表
- * @returns 权限的数据（字符串数组）
+ * @param menuList 菜单的列表
+ * @returns 权限的数组(字符串数组)
  */
-
 export function mapMenusToPermissions(menuList: any[]) {
   const permissions: string[] = []
 
-  function recurseGetPermissions(menus: any[]) {
+  function recurseGetPermission(menus: any[]) {
     for (const item of menus) {
       if (item.type === 3) {
         permissions.push(item.permission)
       } else {
-        recurseGetPermissions(item.children ?? [])
+        recurseGetPermission(item.children ?? [])
       }
     }
   }
-  recurseGetPermissions(menuList)
+  recurseGetPermission(menuList)
+
   return permissions
 }

@@ -101,9 +101,6 @@ const showGoodsCategoryFavor = computed(() => {
 </script>
 
 <style scoped>
-.dashboard {
-}
-
 .el-row {
   margin-bottom: 20px;
 }

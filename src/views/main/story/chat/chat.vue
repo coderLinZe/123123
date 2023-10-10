@@ -4,14 +4,13 @@
       <div class="header-btn">
         <el-button icon="search" type="primary" @click="submitClick">提交</el-button>
         <el-button icon="refresh" @click="resetBtnClick">重置</el-button>
-      
       </div>
       <el-input
-          v-model="title"
-          :autosize="{ minRows: 2, maxRows: 4 }"
-          type="textarea"
-          placeholder="请输入标题"
-        />
+        v-model="title"
+        :autosize="{ minRows: 2, maxRows: 4 }"
+        type="textarea"
+        placeholder="请输入标题"
+      />
     </div>
     <div style="border: 1px solid #ccc">
       <Toolbar

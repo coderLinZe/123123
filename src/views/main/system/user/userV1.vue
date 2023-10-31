@@ -15,7 +15,7 @@
 <script setup lang="ts" name="user">
 import { ref } from 'vue'
 import userContent from './c-cpn/user-content.vue'
-import userSearch from './c-cpn/user-search.vue'
+// import userSearch from './c-cpn/user-search.vue'
 import UserModal from './c-cpn/user-modal.vue'
 import pageSearch from '@/components/page-search/page-search.vue'
 import searchConfig from './config/search-config'
